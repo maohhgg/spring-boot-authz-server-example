@@ -1,5 +1,6 @@
 package com.demo.spring.AuthorizationServerApplication;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -12,6 +13,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Order(1)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+
+    @Value("${oauth.login.user.username}")
+    private String username;
+    @Value("${oauth.login.user.password}")
+    private String password;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -27,8 +33,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-            .withUser("admin")
-            .password(passwordEncoder().encode("password"))
+            .withUser(username)
+            .password(passwordEncoder().encode(password))
             .roles("user");
     }
 

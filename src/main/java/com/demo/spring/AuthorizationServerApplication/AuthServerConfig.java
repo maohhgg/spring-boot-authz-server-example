@@ -1,5 +1,6 @@
 package com.demo.spring.AuthorizationServerApplication;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -10,6 +11,16 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 @Configuration
 @EnableAuthorizationServer
 public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
+
+    @Value("${client.oauth.id}")
+    private String clientId;
+    @Value("${client.oauth.secret}")
+    private String clientSecret;
+    @Value("${client.oauth.scopes}")
+    private String clientScopes;
+    @Value("${client.oauth.redirectUri}")
+    private String clientRedirectUri;
+
 
     private final PasswordEncoder passwordEncoder;
 
@@ -25,11 +36,11 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
-                .withClient("grafana")
-                .secret(passwordEncoder.encode("123456"))
+                .withClient(clientId)
+                .secret(passwordEncoder.encode(clientSecret))
                 .authorizedGrantTypes("password", "authorization_code")
-                .scopes("user")
-                .redirectUris("http://10.0.0.11:3000/login/generic_oauth")
+                .scopes(clientScopes)
+                .redirectUris(clientRedirectUri)
                 .autoApprove(true)
                 .accessTokenValiditySeconds(5000)
                 .refreshTokenValiditySeconds(50000);
