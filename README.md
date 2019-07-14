@@ -70,7 +70,7 @@ enabled = true
 allow_sign_up = true
 client_id = grafana
 client_secret = 123456
-scopes = user
+scopes = user:email
 auth_url = http://10.0.0.2:8080/oauth/authorize
 token_url = http://10.0.0.2:8080/oauth/token
 api_url = http://10.0.0.2:8080/api/users/me
@@ -79,3 +79,30 @@ api_url = http://10.0.0.2:8080/api/users/me
 注意 `auth.generic_oauth.name`  配置项不要取消注释，保持`;name = OAuth`这个状态。
 
 重启grfana后，在grafana登录页点击 **Sign in with OAuth** 查看效果。
+
+###　其他
+
+关于权限，当前没有其他方法，可以在`api_url`中返回相同的用户，`src/main/java/com.demo.spring.AuthorizationServerApplication/UserController`
+
+```java
+Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+String name = loggedInUser.getName();
+
+UserProfile profile = new UserProfile();
+profile.setName(name);
+profile.setEmail(name + "@localhost");
+
+return ResponseEntity.ok(profile);
+```
+
+现在是获取登录用户名称，可以返回指定的用户
+
+```java
+UserProfile profile = new UserProfile();
+profile.setName(‘Admin’);
+profile.setEmail("admin@localhost");
+
+return ResponseEntity.ok(profile);
+```
+
+关于权限自定义配置请留意 [grafana#9766](https://github.com/grafana/grafana/issues/9766)
