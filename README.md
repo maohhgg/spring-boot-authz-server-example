@@ -29,9 +29,10 @@ oauth.login.user.username=admin
 oauth.login.user.password=password
 
 #grafana server的客户端配置
+# id secret scopes 三个配置项需要和grafana配置文件中[auth.generic_oauth] client_id client_secret scopes匹配
 client.oauth.id=grafana
 client.oauth.secret=123456
-client.oauth.scopes=user
+client.oauth.scopes=user:email
 client.oauth.redirectUri=http://118.24.151.27:3000/login/generic_oauth
 ```
 
