@@ -16,7 +16,20 @@ git clone https://github.com/maohhgg/spring-boot-authz-server-example.git
 
 
 
-本项目没有使用数据库，全部所需数据保存在 `src/main/resources/oauth_example.sql` 根据你的实际情况更新配置文件
+`src/main/resources/oauth_example.sql` 根据你的实际情况更新配置文件
+
+```properties
+server.port = 8080
+
+spring.datasource.url = jdbc:mysql://10.0.0.11:3306/oauth_example
+spring.datasource.username = root
+spring.datasource.password = password
+spring.datasource.driver-class-name = com.mysql.cj.jdbc.Driver
+
+security.oauth2.resource.filter-order = 3
+```
+
+在 `src/main/resources/oauth_example.sql` 数据库导出文件中，注意修改为自己实际的值
 
 ```sql
 INSERT INTO `users` VALUES (1,'admin','$2a$10$RikbfKckGhQ7XktEW8JaC.ddscwh4s24fhgr.Tk2AEPT7Qfu8G0Jq','admin@local',1);
