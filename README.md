@@ -21,7 +21,7 @@ git clone https://github.com/maohhgg/spring-boot-authz-server-example.git
 ```properties
 server.port = 8080
 
-spring.datasource.url = jdbc:mysql://10.0.0.11:3306/oauth_example
+spring.datasource.url = jdbc:mysql://118.24.151.27:3306/oauth_example
 spring.datasource.username = root
 spring.datasource.password = password
 spring.datasource.driver-class-name = com.mysql.cj.jdbc.Driver
@@ -33,7 +33,7 @@ security.oauth2.resource.filter-order = 3
 
 ```sql
 INSERT INTO `users` VALUES (1,'admin','$2a$10$RikbfKckGhQ7XktEW8JaC.ddscwh4s24fhgr.Tk2AEPT7Qfu8G0Jq','admin@local',1);
-INSERT INTO `oauth_client_details` VALUES ('grafana',NULL,'$2a$10$RikbfKckGhQ7XktEW8JaC.ddscwh4s24fhgr.Tk2AEPT7Qfu8G0Jq','','authorization_code,refresh_token','http://10.0.0.2:3000/login/generic_oauth',NULL,900,NULL,'{}','true');
+INSERT INTO `oauth_client_details` VALUES ('grafana',NULL,'$2a$10$RikbfKckGhQ7XktEW8JaC.ddscwh4s24fhgr.Tk2AEPT7Qfu8G0Jq','','authorization_code,refresh_token','http://118.24.151.27:3000/login/generic_oauth',NULL,900,NULL,'{}','true');
 ```
 
 登录用户：`admin`密码`123456`
@@ -45,7 +45,7 @@ client_id=grafana
 client_secret=123456
 scope=user:email
 authorized_grant_types=authorization_code,refresh_token
-web_server_redirect_uri=http://10.0.0.2:3000/login/generic_oauth
+web_server_redirect_uri=http://118.24.151.27:3000/login/generic_oauth
 autoapprove=true
 ```
 
@@ -102,13 +102,14 @@ api_url = http://118.24.151.27:8080/api/users/me
 
 #### 自动登录
 
-grafana如果需要实现自动登录，需要修改配置为
+grafana如果需要实现自动登录和grafana退出登录，需要修改配置为
 
 ```ini
 ...
 [auth]
 ...
 oauth_auto_login = true
+signout_redirect_url = http://118.24.151.27:8080/logout
 ...
 ```
 

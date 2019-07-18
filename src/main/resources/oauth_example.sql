@@ -96,7 +96,7 @@ CREATE TABLE `oauth_client_details` (
 
 LOCK TABLES `oauth_client_details` WRITE;
 /*!40000 ALTER TABLE `oauth_client_details` DISABLE KEYS */;
-INSERT INTO `oauth_client_details` VALUES ('grafana',NULL,'$2a$10$RikbfKckGhQ7XktEW8JaC.ddscwh4s24fhgr.Tk2AEPT7Qfu8G0Jq','user:email','authorization_code,refresh_token','http://10.0.0.2:3000/login/generic_oauth',NULL,900,NULL,'{}','true');
+INSERT INTO `oauth_client_details` VALUES ('grafana',NULL,'$2a$10$RikbfKckGhQ7XktEW8JaC.ddscwh4s24fhgr.Tk2AEPT7Qfu8G0Jq','user:email','authorization_code,refresh_token','http://118.24.151.27:3000/login/generic_oauth',NULL,900,NULL,'{}','true');
 /*!40000 ALTER TABLE `oauth_client_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
