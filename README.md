@@ -12,31 +12,29 @@ git clone https://github.com/maohhgg/spring-boot-authz-server-example.git
 
 > 示例中的 grafana 的地址为[http://118.24.151.27:3000](http://118.24.151.27:3000)，本项目运行的 [http://118.24.151.27:8080/login](http://118.24.151.27:8080/login)，请根据自身实际情况更改地址
 
-
-
-### 更新配置文件
+### 配置
 
 
 
-本项目没有使用数据库，全部所需数据保存在 `src/main/resources/application.properties` 根据你的实际情况更新配置文件
+本项目没有使用数据库，全部所需数据保存在 `src/main/resources/oauth_example.sql` 根据你的实际情况更新配置文件
 
-```ini
-#运行端口号
-server.port=8080 
-
-#登录用户和密码
-oauth.login.user.username=admin
-oauth.login.user.password=password
-
-#grafana server的客户端配置
-# id secret scopes 三个配置项需要和grafana配置文件中[auth.generic_oauth] client_id client_secret scopes匹配
-client.oauth.id=grafana
-client.oauth.secret=123456
-client.oauth.scopes=user:email
-client.oauth.redirectUri=http://118.24.151.27:3000/login/generic_oauth
+```sql
+INSERT INTO `users` VALUES (1,'admin','$2a$10$RikbfKckGhQ7XktEW8JaC.ddscwh4s24fhgr.Tk2AEPT7Qfu8G0Jq','admin@local',1);
+INSERT INTO `oauth_client_details` VALUES ('grafana',NULL,'$2a$10$RikbfKckGhQ7XktEW8JaC.ddscwh4s24fhgr.Tk2AEPT7Qfu8G0Jq','','authorization_code,refresh_token','http://10.0.0.2:3000/login/generic_oauth',NULL,900,NULL,'{}','true');
 ```
 
-`http://118.24.151.27:3000/login/generic_oauth` 是grafana开启OAuth Authentication后的回调地址。请根据自身实际更新此项。
+登录用户：`admin`密码`123456`
+
+当前`oauth_client_details`表中保存数据为
+
+```ini
+client_id=grafana
+client_secret=123456
+scope=user:email
+authorized_grant_types=authorization_code,refresh_token
+web_server_redirect_uri=http://10.0.0.2:3000/login/generic_oauth
+autoapprove=true
+```
 
 然后使用 Gradle 启动服务
 
@@ -110,24 +108,23 @@ oauth_auto_login = true
 关于权限，当前没有其他方法，可以在`api_url`中返回相同的用户，`src/main/java/com.demo.spring.AuthorizationServerApplication/UserController`
 
 ```java
-Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-String name = loggedInUser.getName();
-
-UserProfile profile = new UserProfile();
-profile.setName(name);
-profile.setEmail(name + "@localhost");
-
-return ResponseEntity.ok(profile);
+@GetMapping("/api/user")
+@ResponseBody
+public ResponseEntity<Users> userInfo(Principal principal) {
+    Users users = customUsersDetailsService.loadUserByUsername(principal.getName());
+    return ResponseEntity.ok(users);
+}
 ```
 
 现在是获取登录用户名称，可以返回指定的用户
 
 ```java
-UserProfile profile = new UserProfile();
-profile.setName(‘Admin’);
-profile.setEmail("admin@localhost");
-
-return ResponseEntity.ok(profile);
+@GetMapping("/api/user")
+@ResponseBody
+public ResponseEntity<Users> userInfo(Principal principal) {
+    Users users = new User(principal.getName(),'',principal.getName() + "@qq.com");
+    return ResponseEntity.ok(users);
+}
 ```
 
 关于权限自定义配置请留意 [grafana#9766](https://github.com/grafana/grafana/issues/9766)
